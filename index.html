@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Personal Finance App</title>
+    <style>
+        :root {
+            --primary-blue: #0d6efd;
+            --primary-green: #198754;
+            --accent-orange: #fd7e14;
+            --accent-yellow: #ffc107;
+            --background-gray: #f8f9fa;
+            --text-dark: #343a40;
+            --white: #fff;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-gray);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem;
+            background-color: #e9ecef;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #ced4da;
+        }
+
+        main {
+            flex: 1;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .card img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-container {
+            background-color: #e9ecef;
+            border-radius: 5px;
+            height: 10px;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 5px;
+            background-color: var(--primary-green);
+        }
+
+        .alert {
+            background-color: var(--accent-yellow);
+            color: var(--text-dark);
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #e9ecef;
+            margin-top: auto;
+        }
+
+        button {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0b5ed7;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Smart Personal Finance</h1>
+    </header>
+
+    <nav>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#expenses">Expenses</a>
+        <a href="#budgets">Budgets</a>
+        <a href="#goals">Goals</a>
+        <a href="#reports">Reports</a>
+    </nav>
+
+    <main>
+        <section id="dashboard" class="card">
+            <h2 class="card-title">Dashboard</h2>
+            <img src="https://picsum.photos/id/101/300/200" alt="Dashboard Overview">
+            <div class="alert">Upcoming bill: Electricity - $150 due on 2024-05-15</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: 75%;"></div>
+            </div>
+            <p>Budget Progress: 75%</p>
+        </section>
+
+        <section id="expenses" class="card">
+            <h2 class="card-title">Expenses</h2>
+            <input type="text" id="expenseDescription" placeholder="Expense Description">
+            <input type="number" id="expenseAmount" placeholder="Amount">
+            <select id="expenseCategory">
+                <option value="food">Food</option>
+                <option value="transport">Transport</option>
+                <option value="utilities">Utilities</option>
+                <option value="entertainment">Entertainment</option>
+            </select>
+            <button onclick="addExpense()">Add Expense</button>
+            <div id="expenseList"></div>
+        </section>
+
+        <section id="budgets" class="card">
+            <h2 class="card-title">Budgets</h2>
+            <input type="number" id="budgetAmount" placeholder="Budget Amount">
+            <select id="budgetCategory">
+                <option value="food">Food</option>
+                <option value="transport">Transport</option>
+                <option value="utilities">Utilities</option>
+                <option value="entertainment">Entertainment</option>
+            </select>
+            <button onclick="setBudget()">Set Budget</button>
+            <div id="budgetList"></div>
+        </section>
+
+        <section id="goals" class="card">
+            <h2 class="card-title">Financial Goals</h2>
+            <input type="text" id="goalDescription" placeholder="Goal Description">
+            <input type="number" id="goalAmount" placeholder="Target Amount">
+            <button onclick="addGoal()">Set Goal</button>
+            <div id="goalList"></div>
+        </section>
+
+        <section id="reports" class="card">
+            <h2 class="card-title">Financial Reports</h2>
+            <img src="https://picsum.photos/id/201/300/200" alt="Financial Report Chart">
+            <p>Total Expenses: <span id="totalExpenses">$0</span></p>
+            <p>Total Budgets: <span id="totalBudgets">$0</span></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Smart Personal Finance App</p>
+    </footer>
+
+    <script>
+        let expenses = [];
+        let budgets = [];
+        let goals = [];
+
+        function addExpense() {
+            const description = document.getElementById('expenseDescription').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            const category = document.getElementById('expenseCategory').value;
+
+            if (description && amount && category) {
+                expenses.push({ description, amount, category });
+                updateExpenseList();
+                updateTotalExpenses();
+                document.getElementById('expenseDescription').value = '';
+                document.getElementById('expenseAmount').value = '';
+            }
+        }
+
+        function updateExpenseList() {
+            const expenseList = document.getElementById('expenseList');
+            expenseList.innerHTML = '';
+            expenses.forEach(expense => {
+                const expenseItem = document.createElement('div');
+                expenseItem.textContent = `${expense.description} - $${expense.amount} (${expense.category})`;
+                expenseList.appendChild(expenseItem);
+            });
+        }
+
+        function setBudget() {
+            const amount = parseFloat(document.getElementById('budgetAmount').value);
+            const category = document.getElementById('budgetCategory').value;
+
+            if (amount && category) {
+                budgets.push({ amount, category });
+                updateBudgetList();
+                updateTotalBudgets();
+                document.getElementById('budgetAmount').value = '';
+            }
+        }
+
+        function updateBudgetList() {
+            const budgetList = document.getElementById('budgetList');
+            budgetList.innerHTML = '';
+            budgets.forEach(budget => {
+                const budgetItem = document.createElement('div');
+                budgetItem.textContent = `${budget.category} - $${budget.amount}`;
+                budgetList.appendChild(budgetItem);
+            });
+        }
+
+        function addGoal() {
+            const description = document.getElementById('goalDescription').value;
+            const amount = parseFloat(document.getElementById('goalAmount').value);
+            if(description && amount) {
+                goals.push({description, amount});
+                updateGoalList();
+                document.getElementById('goalDescription').value = '';
+                document.getElementById('goalAmount').value = '';
+            }
+        }
+
+        function updateGoalList() {
+            const goalList = document.getElementById('goalList');
+            goalList.innerHTML = '';
+            goals.forEach(goal => {
+                const goalItem = document.createElement('div');
+                goalItem.textContent = `${goal.description} - $${goal.amount}`;
+                goalList.appendChild(goalItem);
+            })
+        }
+
+        function updateTotalExpenses() {
+            const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+            document.getElementById('totalExpenses').textContent = `$${totalExpenses.toFixed(2)}`;
+        }
+
+        function updateTotalBudgets() {
+            const totalBudgets = budgets.reduce((acc, curr) => acc + curr.amount, 0);
+            document.getElementById('totalBudgets').textContent = `$${totalBudgets.toFixed(2)}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize any interactive elements if needed
+        });
+    </script>
+</body>
+</html>
